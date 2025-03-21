@@ -4,13 +4,15 @@ import { CoffeeType } from "../../context/Coffees";
 
 interface ButtonRemoveType{
     coffee: CoffeeType;
-    actionRemoveCoffee: (coffee?: CoffeeType) => void;
+    actionRemoveCoffee?: (coffee?: CoffeeType) => void;
 }
 
 export const ButtonRemove = ({coffee, actionRemoveCoffee}:ButtonRemoveType) => {
 
     function handleClickRemove () {
-        actionRemoveCoffee(coffee);
+        if (actionRemoveCoffee) {
+            actionRemoveCoffee(coffee);
+        }
     }
 
     return (

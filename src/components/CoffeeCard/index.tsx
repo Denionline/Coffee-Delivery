@@ -12,8 +12,8 @@ interface CoffeeCardType{
     coffee: CoffeeType;
     quantityPassed: number;
     inCart: boolean;
-    updateChangeToOrder: ({coffee, newQuantity}:CoffeesCartNewQuantityType) => void;
-    actionRemoveCoffee: (coffee?: CoffeeType) => void;
+    updateChangeToOrder?: ({coffee, newQuantity}:CoffeesCartNewQuantityType) => void;
+    actionRemoveCoffee?: (coffee?: CoffeeType) => void;
 }
 
 export const CoffeeCard = ({ coffee, quantityPassed, inCart, updateChangeToOrder, actionRemoveCoffee }: CoffeeCardType) => {
@@ -33,7 +33,9 @@ export const CoffeeCard = ({ coffee, quantityPassed, inCart, updateChangeToOrder
     function increaseQuantity () {
         setQuantity(prevQuantity => {
             const newQuantity = prevQuantity + 1;
-            if(inCart) updateChangeToOrder({coffee, newQuantity});
+            if (updateChangeToOrder && inCart) {
+                    updateChangeToOrder({coffee, newQuantity});
+            }
             return newQuantity;
         });
     }
@@ -41,11 +43,15 @@ export const CoffeeCard = ({ coffee, quantityPassed, inCart, updateChangeToOrder
     function decreaseQuantity () {
         setQuantity(prevQuantity => {
             if (prevQuantity === 1){
-                if(inCart) actionRemoveCoffee(coffee);
+                if(inCart && actionRemoveCoffee) {
+                    actionRemoveCoffee(coffee);
+                }
                 return prevQuantity;
             }else{
                 const newQuantity = prevQuantity - 1;
-                if(inCart) updateChangeToOrder({coffee, newQuantity});
+                if(inCart && updateChangeToOrder) {
+                    updateChangeToOrder({coffee, newQuantity});
+                }
                 return newQuantity;
             }
         });
