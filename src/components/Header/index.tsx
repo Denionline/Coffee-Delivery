@@ -21,36 +21,37 @@ export const Header = () => {
     state: string;
   } | null>(null);
 
-  const getLocation = () => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition( async (position) => {
-        const { latitude, longitude } = position.coords;
-
-        try {
-          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-          const data = await response.json();
-
-          setLocation({
-            city: data.address.city || data.address.town || data.address.village || "",
-            state: data.address.state || "",
-          })
-        }
-        catch (err) {
-          console.error("Error to find address");
-        }
-      },
-      (error) => {
-        console.error("Error to get address: " + error.message);
-      }
-    )
-    } else {
-      console.error("Error to access location");
-    }
-  }
-
   useEffect(() => {
+    const getLocation = () => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition( async (position) => {
+          const { latitude, longitude } = position.coords;
+  
+          try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+            const data = await response.json();
+  
+            setLocation({
+              city: data.address.city || data.address.town || data.address.village || "",
+              state: data.address.state || "",
+            })
+          }
+          catch (err) {
+            console.error("Error to find address");
+          }
+        },
+        (error) => {
+          console.error("Error to get address: " + error.message);
+        }
+      )
+      } else {
+        console.error("Error to access location");
+      }
+    }
+
     getLocation();
-  })
+  }, []);
+
 
   useEffect(() => {
     setQuantity(order.coffeesCart.length);
