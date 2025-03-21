@@ -6,17 +6,15 @@ import { ButtonQuantity } from "../ButtonQuantity";
 import { OrderContext } from "../../context/OrderContext";
 import { CoffeeType } from "../../context/Coffees";
 import { ButtonRemove } from "../ButtonRemove";
-import { CoffeesCartNewQuantityType } from "../../reducer/CoffeesCart/reducer";
 
 interface CoffeeCardType{
     coffee: CoffeeType;
     quantityPassed: number;
     inCart: boolean;
-    updateChangeToOrder?: ({coffee, newQuantity}:CoffeesCartNewQuantityType) => void;
-    actionRemoveCoffee?: (coffee?: CoffeeType) => void;
 }
 
-export const CoffeeCard = ({ coffee, quantityPassed, inCart, updateChangeToOrder, actionRemoveCoffee }: CoffeeCardType) => {
+export const CoffeeCard = ({ coffee, quantityPassed, inCart}: CoffeeCardType) => {
+    const { changeCoffeeInOrder, removeCoffeeInCart } = useContext(OrderContext);
 
     const { addCoffeeToCart } = useContext(OrderContext);
 
@@ -25,33 +23,44 @@ export const CoffeeCard = ({ coffee, quantityPassed, inCart, updateChangeToOrder
     function handleClickShoppingCart () {
         addCoffeeToCart({
             coffee,
-            quantity
-        })
+            quantity,
+        });
+
         setQuantity(1);
     }
 
-    function increaseQuantity () {
-        setQuantity(prevQuantity => {
+    function increaseQuantity() {
+        setQuantity((prevQuantity) => {
             const newQuantity = prevQuantity + 1;
-            if (updateChangeToOrder && inCart) {
-                    updateChangeToOrder({coffee, newQuantity});
+    
+            if (inCart) {
+                setTimeout(() => {
+                    changeCoffeeInOrder({ coffee, quantity: newQuantity });
+                }, 0);
             }
+    
             return newQuantity;
         });
     }
     
-    function decreaseQuantity () {
-        setQuantity(prevQuantity => {
-            if (prevQuantity === 1){
-                if(inCart && actionRemoveCoffee) {
-                    actionRemoveCoffee(coffee);
+    function decreaseQuantity() {
+        setQuantity((prevQuantity) => {
+            if (prevQuantity === 1) {
+                if (inCart) {
+                    setTimeout(() => {
+                        removeCoffeeInCart(coffee);
+                    }, 0);
                 }
                 return prevQuantity;
-            }else{
+            } else {
                 const newQuantity = prevQuantity - 1;
-                if(inCart && updateChangeToOrder) {
-                    updateChangeToOrder({coffee, newQuantity});
+    
+                if (inCart) {
+                    setTimeout(() => {
+                        changeCoffeeInOrder({ coffee, quantity: newQuantity });
+                    }, 0);
                 }
+    
                 return newQuantity;
             }
         });
@@ -76,7 +85,6 @@ export const CoffeeCard = ({ coffee, quantityPassed, inCart, updateChangeToOrder
                                      />
                                     <ButtonRemove 
                                         coffee={coffee}
-                                        actionRemoveCoffee={actionRemoveCoffee} 
                                     />
                                 </div>
                             </div>

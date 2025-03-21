@@ -26,9 +26,8 @@ export interface CoffeesCartNewQuantityType {
     newQuantity: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const coffeesReducer = (state:OrderType, action:any) => {
-    switch(action.type){
+switch(action.type){
         case ActionTypes.ADD_COFFEE_TO_CART:{
             return produce(state, draft => {
                 const indexCoffeeAlreadyInCart = state.coffeesCart.findIndex(currentCoffee => {
@@ -50,9 +49,11 @@ export const coffeesReducer = (state:OrderType, action:any) => {
         }
         case ActionTypes.REMOVE_COFFEE_IN_CART: {
             return produce(state, draft => {
-                const indexCoffeeToRemove = draft.coffeesCart.findIndex(currentCoffee => currentCoffee.coffee.id === action.payload.id);
-                draft.coffeesCart.splice(indexCoffeeToRemove, 1);
-            })
+                draft.coffeesCart = draft.coffeesCart.filter(
+                    coffeeCart => coffeeCart.coffee.id !== action.payload.id
+                );
+            });
+            
         }
         case ActionTypes.SAVE_ADDRESS_ON_ORDER:
             return produce(state, draft => {

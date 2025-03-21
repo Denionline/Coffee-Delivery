@@ -1,16 +1,10 @@
 import { useContext } from "react";
 import { OrderContext } from "../../../../context/OrderContext";
 import { CoffeeCard } from "../../../../components/CoffeeCard";
-import { CoffeeType } from "../../../../context/Coffees";
 import { CartContainer, Total } from "./styles";
 
-interface UpdateChangeToOrderType{
-    coffee: CoffeeType;
-    newQuantity: number;
-}
-
 export const Cart = () => {
-    const { order, changeCoffeeInOrder, removeCoffeeInCart } = useContext(OrderContext);
+    const { order } = useContext(OrderContext);
 
     const totalValueCoffees = order.coffeesCart.reduce((accumulator, currentValue) => {
         return accumulator + currentValue.coffee.price * currentValue.quantity;
@@ -18,16 +12,6 @@ export const Cart = () => {
 
     const deliveryValue = 3.50;
     const totalValue = totalValueCoffees + deliveryValue;
-
-
-    function updateChangeToOrder ({coffee, newQuantity}: UpdateChangeToOrderType) {
-        const quantity = newQuantity;
-        changeCoffeeInOrder({coffee, quantity});
-    }
-
-    function actionRemoveCoffee (coffee?: CoffeeType) {
-        if(coffee) removeCoffeeInCart(coffee.id);
-    }
 
     return (
         <CartContainer>
@@ -38,8 +22,6 @@ export const Cart = () => {
                         coffee={Coffee.coffee}
                         quantityPassed={Coffee.quantity}
                         inCart={true}
-                        updateChangeToOrder={updateChangeToOrder}
-                        actionRemoveCoffee={actionRemoveCoffee}
                     />
                 )
             })}

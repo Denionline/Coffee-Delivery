@@ -1,18 +1,18 @@
 import { Trash } from "@phosphor-icons/react"
 import { ButtonRemoveContainer } from "./styles"
 import { CoffeeType } from "../../context/Coffees";
+import { useContext } from "react";
+import { OrderContext } from "../../context/OrderContext";
 
 interface ButtonRemoveType{
     coffee: CoffeeType;
-    actionRemoveCoffee?: (coffee?: CoffeeType) => void;
 }
 
-export const ButtonRemove = ({coffee, actionRemoveCoffee}:ButtonRemoveType) => {
+export const ButtonRemove = ({coffee}:ButtonRemoveType) => {
+    const { removeCoffeeInCart } = useContext(OrderContext);
 
     function handleClickRemove () {
-        if (actionRemoveCoffee) {
-            actionRemoveCoffee(coffee);
-        }
+        removeCoffeeInCart(coffee);
     }
 
     return (

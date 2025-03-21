@@ -2,12 +2,13 @@ import { createContext, ReactNode, useEffect, useReducer } from "react";
 import { CoffeesCartType, coffeesReducer, OrderType } from "../reducer/CoffeesCart/reducer";
 import { NewCycleFormData } from "../pages/Checkout";
 import { addCoffeeToCartAction, changeCoffeeInOrderAction, removeCoffeeInCartAction, saveAddressOnOrderAction } from "../reducer/CoffeesCart/actions";
+import { CoffeeType } from "./Coffees";
 
 export interface OrderContextType {
     order: OrderType;
     addCoffeeToCart: (Coffee: CoffeesCartType) => void;
     changeCoffeeInOrder: ({coffee, quantity}:CoffeesCartType) => void;
-    removeCoffeeInCart: (id: number) => void;
+    removeCoffeeInCart: (coffee: CoffeeType) => void;
     saveAddressOnOrder: (data: NewCycleFormData) => void;
 }
 
@@ -45,8 +46,8 @@ export const OrderContextProvider = ({ children }:CyclesContextProviderProps) =>
         dispath(changeCoffeeInOrderAction({coffee, quantity}));
     }
 
-    function removeCoffeeInCart (id: number) {
-        dispath(removeCoffeeInCartAction(id));
+    function removeCoffeeInCart (coffee: CoffeeType) {
+        dispath(removeCoffeeInCartAction(coffee.id));
     }
 
     function saveAddressOnOrder (data:NewCycleFormData) {
